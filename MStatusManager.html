@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MStatusManager 接口汇报</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #657282;
+      --line: #d8dee6;
+      --paper: #f7f9fc;
+      --panel: #ffffff;
+      --accent: #006d77;
+      --accent-2: #b7791f;
+      --accent-3: #5b5f97;
+      --ok: #1f7a4c;
+      --warn: #a15c12;
+      --shadow: 0 26px 70px rgba(24, 36, 56, .18);
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(0, 109, 119, .16), transparent 34rem),
+        linear-gradient(135deg, #eef3f8 0%, #f8fafc 44%, #eef2f1 100%);
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 24px;
+      padding: 58px 72px 96px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 28px;
+      border: 1px solid rgba(120, 135, 153, .24);
+      border-radius: 18px;
+      pointer-events: none;
+    }
+
+    header {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    h1, h2 {
+      margin: 0;
+      letter-spacing: 0;
+      line-height: 1.08;
+    }
+
+    h1 {
+      max-width: 980px;
+      font-size: 66px;
+      font-weight: 800;
+    }
+
+    h2 {
+      max-width: 920px;
+      font-size: 46px;
+      font-weight: 780;
+    }
+
+    .date {
+      min-width: 170px;
+      color: var(--muted);
+      font-size: 15px;
+      text-align: right;
+      line-height: 1.7;
+    }
+
+    main {
+      position: relative;
+      display: grid;
+      align-items: center;
+      z-index: 1;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      align-items: center;
+      gap: 46px;
+    }
+
+    .lead {
+      max-width: 880px;
+      margin: 0;
+      color: #334155;
+      font-size: 30px;
+      line-height: 1.55;
+    }
+
+    .big-number {
+      font-size: 84px;
+      font-weight: 850;
+      line-height: 1;
+      color: var(--accent);
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .points {
+      display: grid;
+      gap: 18px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .point {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 16px;
+      align-items: start;
+      padding: 18px 20px;
+      background: rgba(255, 255, 255, .82);
+      border: 1px solid rgba(145, 158, 174, .32);
+      border-radius: 8px;
+      box-shadow: 0 12px 34px rgba(30, 41, 59, .08);
+    }
+
+    .point strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 23px;
+    }
+
+    .point span, .point p {
+      margin: 0;
+      color: #445363;
+      font-size: 19px;
+      line-height: 1.55;
+    }
+
+    .marker {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #e0f2f1;
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .metric {
+      min-height: 156px;
+      padding: 22px;
+      border: 1px solid rgba(145, 158, 174, .3);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .86);
+      box-shadow: 0 14px 36px rgba(30, 41, 59, .08);
+    }
+
+    .metric b {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--accent);
+      font-size: 42px;
+      line-height: 1;
+    }
+
+    .metric span {
+      color: #435266;
+      font-size: 18px;
+      line-height: 1.48;
+    }
+
+    .diagram {
+      display: grid;
+      grid-template-columns: 1fr 86px 1fr 86px 1fr;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .node {
+      min-height: 178px;
+      display: grid;
+      align-content: center;
+      gap: 10px;
+      padding: 24px;
+      border: 1px solid rgba(145, 158, 174, .34);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .9);
+      box-shadow: var(--shadow);
+    }
+
+    .node b {
+      font-size: 25px;
+    }
+
+    .node span {
+      color: #435266;
+      font-size: 18px;
+      line-height: 1.48;
+    }
+
+    .arrow {
+      color: var(--accent);
+      font-size: 48px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .panel {
+      padding: 26px;
+      border: 1px solid rgba(145, 158, 174, .32);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .86);
+      box-shadow: 0 12px 34px rgba(30, 41, 59, .08);
+    }
+
+    .panel h3 {
+      margin: 0 0 16px;
+      color: #243447;
+      font-size: 26px;
+    }
+
+    .panel ul {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding-left: 22px;
+      color: #415166;
+      font-size: 19px;
+      line-height: 1.5;
+    }
+
+    .code-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .code-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border-radius: 6px;
+      background: #f1f5f9;
+      color: #344357;
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    code {
+      color: #113b46;
+      font-family: Consolas, "SFMono-Regular", monospace;
+      font-size: .96em;
+      font-weight: 650;
+    }
+
+    .matrix {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .9);
+      box-shadow: 0 14px 36px rgba(30, 41, 59, .08);
+    }
+
+    .matrix th, .matrix td {
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 19px;
+      line-height: 1.45;
+    }
+
+    .matrix th {
+      background: #e8f3f4;
+      color: #173d45;
+      font-size: 18px;
+    }
+
+    .matrix tr:last-child td { border-bottom: 0; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e8f3f4;
+      color: #075c66;
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tag.warn {
+      background: #fff0d8;
+      color: #8a4b08;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .step {
+      position: relative;
+      min-height: 236px;
+      padding: 24px;
+      border: 1px solid rgba(145, 158, 174, .32);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .88);
+      box-shadow: 0 12px 34px rgba(30, 41, 59, .08);
+    }
+
+    .step small {
+      display: block;
+      margin-bottom: 18px;
+      color: var(--accent);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 23px;
+    }
+
+    .step span {
+      color: #445363;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .quote {
+      max-width: 960px;
+      padding-left: 28px;
+      border-left: 6px solid var(--accent);
+      color: #253444;
+      font-size: 36px;
+      line-height: 1.45;
+      font-weight: 720;
+    }
+
+    .slide footer {
+      display: none;
+    }
+
+    .deck-footer {
+      position: fixed;
+      left: 72px;
+      right: 156px;
+      bottom: 42px;
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 320px minmax(60px, 1fr);
+      gap: 24px;
+      align-items: center;
+      z-index: 8;
+      pointer-events: none;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .deck-footer .count {
+      text-align: right;
+    }
+
+    footer {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .progress {
+      width: 320px;
+      height: 6px;
+      justify-self: center;
+      border-radius: 999px;
+      background: rgba(101, 114, 130, .22);
+      overflow: hidden;
+    }
+
+    .bar {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .16s ease;
+      transform-origin: left center;
+    }
+
+    .controls {
+      position: fixed;
+      right: 28px;
+      bottom: 28px;
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+    }
+
+    .controls button {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(105, 119, 137, .35);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .9);
+      color: #223244;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(30, 41, 59, .12);
+    }
+
+    .notes {
+      position: fixed;
+      left: 28px;
+      bottom: 28px;
+      z-index: 10;
+      max-width: 460px;
+      padding: 14px 16px;
+      border: 1px solid rgba(105, 119, 137, .25);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .92);
+      color: #3d4a5c;
+      font-size: 14px;
+      line-height: 1.55;
+      box-shadow: 0 10px 30px rgba(30, 41, 59, .12);
+    }
+
+    .hidden { display: none; }
+
+    @media (max-width: 980px) {
+      body { overflow: auto; }
+      .deck { height: auto; min-height: 100vh; }
+      .slide {
+        position: relative;
+        display: none;
+        min-height: 100vh;
+        padding: 42px 28px 92px;
+      }
+      .slide.active { display: grid; }
+      .slide::before { inset: 14px; }
+      header { display: block; }
+      .date { margin-top: 14px; text-align: left; }
+      h1 { font-size: 42px; }
+      h2 { font-size: 34px; }
+      .lead { font-size: 23px; }
+      .hero-grid, .two-col, .diagram, .timeline, .metrics {
+        grid-template-columns: 1fr;
+      }
+      .arrow { transform: rotate(90deg); }
+      .deck-footer {
+        left: 28px;
+        right: 28px;
+        bottom: 28px;
+        grid-template-columns: 1fr auto;
+      }
+      .deck-footer .progress {
+        width: 180px;
+        grid-column: 1 / -1;
+        grid-row: 1;
+        justify-self: center;
+      }
+      .deck-footer .count {
+        grid-column: 2;
+        grid-row: 2;
+      }
+      .notes { display: none; }
+    }
+
+    @media print {
+      body {
+        overflow: visible;
+        background: #fff;
+      }
+      .deck { height: auto; }
+      .slide {
+        position: relative;
+        opacity: 1;
+        transform: none;
+        page-break-after: always;
+        min-height: 100vh;
+      }
+      .controls, .notes, .deck-footer { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck">
+    <section class="slide active" data-note="开场：这不是一个普通工具类，而是 UIBase 框架里的系统状态中枢。汇报重点放在它解决什么问题、怎么接入、后续怎么治理。">
+      <header>
+        <div>
+          <p class="eyebrow">UIBase 框架能力汇报</p>
+          <h1>MStatusManager<br>系统状态管理接口</h1>
+        </div>
+        <div class="date">欧文航<br>2026-05</div>
+      </header>
+      <main class="hero-grid">
+        <p class="lead">将语言、驾驶限制、日夜主题、STR、关机状态、P 席屏幕可用性等系统状态统一封装，为业务页面提供“可查询、可观察、可回调”的稳定入口。</p>
+        <div class="metrics">
+          <div class="metric"><b>6+</b><span>核心系统状态集中管理</span></div>
+          <div class="metric"><b>2</b><span>接入模式：主动查询与实时观察</span></div>
+          <div class="metric"><b>1</b><span>单例入口，降低业务接入复杂度</span></div>
+        </div>
+      </main>
+      <footer><span>MStatusManager Interface Documentation</span><div class="progress"><div class="bar"></div></div><span class="count"></span></footer>
+    </section>
+
+    <section class="slide" data-note="这一页强调管理价值：原本分散在系统、电源、车辆、配置变化里的状态，由它收口。领导关心的是稳定、复用、减少重复开发。">
+      <header>
+        <div>
+          <p class="eyebrow">定位与价值</p>
+          <h2>一个入口收口多类系统状态</h2>
+        </div>
+      </header>
+      <main>
+        <ul class="points">
+          <li class="point"><div class="marker">1</div><div><strong>降低业务耦合</strong><p>业务页面不直接感知底层电源、车辆、配置变化等来源，通过 <code>MStatusManager</code> 获取统一语义。</p></div></li>
+          <li class="point"><div class="marker">2</div><div><strong>提升状态一致性</strong><p>初始化时注册 STR 电源监听、广播、驾驶限制监控和日夜主题，保证应用内状态同步。</p></div></li>
+          <li class="point"><div class="marker">3</div><div><strong>支持实时响应</strong><p>既提供轮询查询方法，也提供 <code>MLiveData</code> 和 <code>MStatusCallback</code>，适配不同业务场景。</p></div></li>
+        </ul>
+      </main>
+      <footer><span>从“分散读取”到“统一治理”</span><div class="progress"><div class="bar"></div></div><span class="count"></span></footer>
+    </section>
+
+    <section class="slide" data-note="这里用架构图讲清楚：上游来自系统和车辆状态，中间是 MStatusManager，向业务层提供三种消费方式。">
+      <header>
+        <div>
+          <p class="eyebrow">接口结构</p>
+          <h2>状态输入统一汇聚，业务输出标准化</h2>
+        </div>
+      </header>
+      <main>
+        <div class="diagram">
+          <div class="node"><b>系统与车辆状态</b><span>语言 / 配置变化 / 驾驶限制 / 电源状态 / CarData / P 席屏幕能力</span></div>
+          <div class="arrow">→</div>
+          <div class="node"><b>MStatusManager</b><span>单例管理、初始化监听、状态缓存、变化分发</span></div>
+          <div class="arrow">→</div>
+          <div class="node"><b>业务应用</b><span>查询方法、LiveData 观察、Callback 回调三类接入</span></div>
+        </div>
+      </main>
+      <footer><span>registerActivity 负责完成初始化注册</span><div class="progress"><div class="bar"></div></div><span class="count"></span></footer>
+    </section>
+
+    <section class="slide" data-note="这一页介绍状态范围。不是逐个读枚举，而是把它们归类为用户体验、行车安全、电源生命周期、车型能力。">
+      <header>
+        <div>
+          <p class="eyebrow">管理范围</p>
+          <h2>覆盖 UI 运行时最关键的状态面</h2>
+        </div>
+      </header>
+      <main>
+        <table class="matrix">
+          <thead>
+            <tr><th>状态类别</th><th>代表接口</th><th>业务意义</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="tag">用户体验</span></td><td><code>langugeStatus()</code> / <code>themeStatus()</code></td><td>语言与日夜主题变化，支撑界面即时切换。</td></tr>
+            <tr><td><span class="tag">行车安全</span></td><td><code>restrictionStatus()</code></td><td>区分操作限制与视频限制，指导页面禁用或内容屏蔽。</td></tr>
+            <tr><td><span class="tag">电源生命周期</span></td><td><code>getStrStatus()</code> / <code>getShutDownStatus()</code></td><td>识别 STR 与关机准备状态，支持页面收敛资源和保存现场。</td></tr>
+            <tr><td><span class="tag">座舱能力</span></td><td><code>getIsDisplayPSupported()</code> / <code>getVehicleType()</code></td><td>判断 P 席屏幕可用性和车型 gbook code，便于能力差异化适配。</td></tr>
+          </tbody>
+        </table>
+      </main>
+      <footer><span>状态面覆盖体验、安全、生命周期、硬件能力</span><div class="progress"><div class="bar"></div></div><span class="count"></span></footer>
+    </section>
+
+    <section class="slide" data-note="主动查询适合一次性判断，比如页面启动时决定控件初态；LiveData 和 Callback 适合持续变化。">
+      <header>
+        <div>
+          <p class="eyebrow">接入方式</p>
+          <h2>三种方式适配不同业务节奏</h2>
+        </div>
+      </header>
+      <main class="two-col">
+        <div class="panel">
+          <h3>主动查询</h3>
+          <ul>
+            <li><code>restrictionStatus()</code>：当前驾驶限制状态</li>
+            <li><code>langugeStatus()</code>：当前系统语言</li>
+            <li><code>themeStatus()</code>：当前日夜主题</li>
+            <li><code>getStrStatus()</code>：当前 STR 状态</li>
+            <li><code>getShutDownStatus()</code>：当前关机状态</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>实时订阅</h3>
+          <ul>
+            <li><code>getRestrictionData()</code> / <code>getLanguageData()</code> / <code>getThemeData()</code></li>
+            <li><code>getVehicleType()</code> 观察车型 gbook code</li>
+            <li><code>registerStatusCallback()</code> 注册后立即回放当前状态，并继续接收变化</li>
+            <li><code>unregisterStatusCallback()</code> 页面销毁时解除订阅</li>
+          </ul>
+        </div>
+      </main>
+      <footer><span>查询决定初态，订阅驱动变化</span><div class="progress"><div class="bar"></div></div><span class="count"></span></footer>
+    </section>
+
+    <section class="slide" data-note="这里讲最容易出问题的状态编码。驾驶限制是四象限，STR/关机状态来自 SysCtrlPowerManager，业务不要硬猜含义。">
+      <header>
+        <div>
+          <p class="eyebrow">关键状态编码</p>
+          <h2>核心枚举需要在业务侧形成统一认知</h2>
+        </div>
+      </header>
+      <main class="two-col">
+        <div class="panel">
+          <h3>驾驶限制四象限</h3>
+          <ul class="code-list">
+            <li><code>0</code><span>操作 OFF，视频 OFF</span></li>
+            <li><code>1</code><span>操作 ON，视频 OFF</span></li>
+            <li><code>2</code><span>操作 OFF，视频 ON</span></li>
+            <li><code>3</code><span>操作 ON，视频 ON</span></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>生命周期状态</h3>
+          <ul>
+            <li><code>STR_OFF = 0</code>，<code>STR_ON = 1</code></li>
+            <li><code>SHUTDOWN_PREPARE = 0</code>，<code>SHUTDOWN_NONE = 1</code></li>
+            <li><code>THEME_NONE = -1</code>，<code>THEME_DAY = 0</code>，<code>THEME_NIGHT = 1</code></li>
+            <li><code>LANGUAGE_EN = 0</code>，<code>LANGUAGE_ZH = 1</code></li>
+          </ul>
+        </div>
+      </main>
+      <footer><span>状态值简单，但业务含义必须一致</span><div class="progress"><div class="bar"></div></div><span class="count"></span></footer>
+    </section>
+
+    <section class="slide" data-note="这一页讲接入流程，让领导看到我们有落地路径。强调初始化一次、消费状态、生命周期解绑。">
+      <header>
+        <div>
+          <p class="eyebrow">落地流程</p>
+          <h2>应用接入建议：初始化、消费、解绑</h2>
+        </div>
+      </header>
+      <main>
+        <div class="timeline">
+          <div class="step"><small>Step 01</small><b>应用启动初始化</b><span>调用 <code>getInstance()</code> 获取单例，并在启动阶段执行 <code>registerActivity(context)</code>。</span></div>
+          <div class="step"><small>Step 02</small><b>页面读取初始值</b><span>页面进入时通过查询方法设置语言、主题、驾驶限制等初态。</span></div>
+          <div class="step"><small>Step 03</small><b>订阅实时变化</b><span>高频交互页面使用 <code>MLiveData</code> 或 <code>MStatusCallback</code> 响应变化。</span></div>
+          <div class="step"><small>Step 04</small><b>销毁时解除注册</b><span>页面退出时执行 <code>unregisterStatusCallback()</code>，避免无效回调和资源占用。</span></div>
+        </div>
+      </main>
+      <footer><span>一次初始化，多页面复用</span><div class="progress"><div class="bar"></div></div><span class="count"></span></footer>
+    </section>
+
+    <section class="slide" data-note="讲风险点要克制：文档里 gear 已废弃，langugeStatus 拼写保持接口现状，业务侧要用封装或规范降低误用。">
+      <header>
+        <div>
+          <p class="eyebrow">治理建议</p>
+          <h2>接口稳定之外，还要降低误用成本</h2>
+        </div>
+      </header>
+      <main>
+        <ul class="points">
+          <li class="point"><div class="marker">!</div><div><strong>废弃接口隔离</strong><p><code>gearStatus()</code> 与 <code>getGearData()</code> 已废弃且始终返回 0，建议业务侧不再新增使用。</p></div></li>
+          <li class="point"><div class="marker">A</div><div><strong>状态语义文档化</strong><p>对驾驶限制、STR、关机状态建立统一说明，避免不同页面对同一状态做出不一致反应。</p></div></li>
+          <li class="point"><div class="marker">T</div><div><strong>测试覆盖关键变化</strong><p>重点验证语言切换、日夜主题切换、行车限制变化、STR/关机准备等生命周期场景。</p></div></li>
+        </ul>
+      </main>
+      <footer><span>稳定接口 + 使用规范，才能形成框架资产</span><div class="progress"><div class="bar"></div></div><span class="count"></span></footer>
+    </section>
+
+    <section class="slide" data-note="收尾时把 MStatusManager 上升到框架资产：它不是单个页面需求，而是整车 UI 状态治理的基础能力。">
+      <header>
+        <div>
+          <p class="eyebrow">汇报结论</p>
+          <h2>MStatusManager 是 UIBase 的状态底座</h2>
+        </div>
+      </header>
+      <main>
+        <div class="quote">通过统一入口、实时通知和生命周期协同，MStatusManager 将复杂系统状态转化为业务可直接使用的框架能力，适合沉淀为 UIBase 的标准接入规范。</div>
+      </main>
+      <footer><span>建议：纳入新业务页面默认接入清单</span><div class="progress"><div class="bar"></div></div><span class="count"></span></footer>
+    </section>
+  </div>
+
+  <footer class="deck-footer">
+    <span>MStatusManager Interface Documentation</span>
+    <div class="progress" aria-hidden="true"><div class="bar" id="progressBar"></div></div>
+    <span class="count" id="slideCount"></span>
+  </footer>
+
+  <aside class="notes hidden" id="notes"></aside>
+  <div class="controls" aria-label="幻灯片控制">
+    <button type="button" id="prev" title="上一页">‹</button>
+    <button type="button" id="next" title="下一页">›</button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const notes = document.getElementById("notes");
+    const progressBar = document.getElementById("progressBar");
+    const slideCount = document.getElementById("slideCount");
+    let current = 0;
+
+    function render() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle("active", index === current);
+      });
+      progressBar.style.width = `${((current + 1) / slides.length) * 100}%`;
+      slideCount.textContent = `${current + 1} / ${slides.length}`;
+      notes.textContent = slides[current].dataset.note || "";
+      document.title = `${current + 1}/${slides.length} MStatusManager 接口汇报`;
+    }
+
+    function go(delta) {
+      current = Math.max(0, Math.min(slides.length - 1, current + delta));
+      render();
+    }
+
+    document.getElementById("prev").addEventListener("click", () => go(-1));
+    document.getElementById("next").addEventListener("click", () => go(1));
+    document.addEventListener("keydown", (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        go(1);
+      }
+      if (["ArrowLeft", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        go(-1);
+      }
+      if (event.key.toLowerCase() === "n") notes.classList.toggle("hidden");
+      if (event.key.toLowerCase() === "p") window.print();
+    });
+
+    render();
+  </script>
+</body>
+</html>
