@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.npm-cache/
+
+# Local review artifacts
+prototype-*.png
+qa-comparison.png
+source-visual.png
+design-qa.md
+AGENTS.md
+打开网页幻灯片.cmd
