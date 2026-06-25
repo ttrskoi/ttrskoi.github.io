@@ -44,8 +44,8 @@ body {
   overflow: hidden;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  gap: clamp(12px, 1.2vw, 22px);
-  padding: clamp(24px, 2.5vw, 48px);
+  gap: clamp(10px, 1vw, 18px);
+  padding: clamp(22px, 2.2vw, 42px);
   color: var(--space-indigo);
   background: var(--parchment);
   border: 1px solid rgba(201, 173, 167, 0.48);
@@ -84,7 +84,7 @@ h1,
 
 h1 {
   font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
-  font-size: clamp(32px, 4.2vw, 74px);
+  font-size: clamp(32px, 3.8vw, 66px);
   line-height: 0.98;
   letter-spacing: -0.05em;
 }
@@ -124,8 +124,8 @@ h1 {
 .slide-content {
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1.78fr) minmax(250px, 0.82fr);
-  gap: clamp(18px, 2vw, 38px);
+  grid-template-columns: minmax(0, 1.68fr) minmax(280px, 0.92fr);
+  gap: clamp(16px, 1.7vw, 32px);
 }
 
 .metrics-grid {
@@ -141,7 +141,7 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: clamp(12px, 1.15vw, 21px);
+  padding: clamp(11px, 1vw, 18px);
   background: rgba(255, 253, 251, 0.72);
   border: 1px solid rgba(74, 78, 105, 0.14);
   border-radius: 10px;
@@ -179,7 +179,7 @@ h1 {
 .metric-card__grade {
   color: var(--space-indigo);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(31px, 3vw, 53px);
+  font-size: clamp(30px, 2.7vw, 48px);
   font-weight: 800;
   line-height: 0.95;
   letter-spacing: -0.035em;
@@ -188,7 +188,7 @@ h1 {
 .metric-card p {
   margin: 12px 0 0;
   color: var(--dusty-grape);
-  font-size: clamp(10px, 0.78vw, 14px);
+  font-size: clamp(9.5px, 0.7vw, 12.5px);
   font-weight: 600;
   line-height: 1.48;
 }
@@ -207,19 +207,41 @@ h1 {
   border-left: 4px solid var(--almond-silk);
 }
 
-.verdict-panel__intro > span {
+.verdict-panel__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.verdict-panel__label-row > span {
   color: var(--lilac-ash);
-  font-size: clamp(10px, 0.78vw, 14px);
+  font-size: clamp(9px, 0.68vw, 12px);
   font-weight: 900;
   letter-spacing: 0.13em;
 }
 
+.reach-badge {
+  padding: 3px 8px;
+  color: var(--space-indigo);
+  background: var(--almond-silk);
+  border-radius: 999px;
+  font-size: clamp(8px, 0.58vw, 10px);
+  font-style: normal;
+  font-weight: 900;
+}
+
+.reach-badge--hard {
+  color: var(--parchment);
+  background: var(--dusty-grape);
+}
+
 .verdict-panel__intro strong {
   display: block;
-  margin: 3px 0 5px;
+  margin: 2px 0 3px;
   color: var(--dusty-grape);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(35px, 3.7vw, 65px);
+  font-size: clamp(30px, 3vw, 52px);
   line-height: 1;
 }
 
@@ -231,44 +253,132 @@ h1 {
 .verdict-panel h2 {
   margin: 0;
   font-family: "Noto Serif SC", "Songti SC", serif;
-  font-size: clamp(17px, 1.55vw, 28px);
+  font-size: clamp(15px, 1.25vw, 22px);
 }
 
 blockquote {
-  margin: clamp(12px, 1.4vw, 24px) 0;
-  padding: clamp(11px, 1vw, 18px);
+  margin: clamp(7px, 0.75vw, 12px) 0;
+  padding: clamp(8px, 0.75vw, 12px);
   color: var(--parchment);
   background: var(--space-indigo);
   border-radius: 8px;
   font-family: "Noto Serif SC", "Songti SC", serif;
-  font-size: clamp(10px, 0.86vw, 15px);
+  font-size: clamp(9px, 0.68vw, 12px);
   font-weight: 700;
   line-height: 1.55;
 }
 
+.candidate-strip {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(74, 78, 105, 0.2);
+}
+
+.candidate-strip span,
+.candidate-strip small {
+  color: var(--lilac-ash);
+  font-size: clamp(8px, 0.58vw, 10px);
+  font-weight: 800;
+}
+
+.candidate-strip strong {
+  color: var(--space-indigo);
+  font-size: clamp(14px, 1.05vw, 18px);
+}
+
+.score-reference-list {
+  display: grid;
+}
+
+.score-reference {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 9px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(74, 78, 105, 0.16);
+}
+
+.score-reference__year {
+  color: var(--dusty-grape);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(11px, 0.86vw, 15px);
+  font-weight: 800;
+}
+
+.score-reference strong {
+  display: inline;
+  color: var(--space-indigo);
+  font-size: clamp(12px, 0.92vw, 16px);
+}
+
+.score-reference strong small {
+  font-size: 0.68em;
+}
+
+.score-reference p {
+  display: inline;
+  margin: 0 0 0 8px;
+  color: var(--dusty-grape);
+  font-size: clamp(8px, 0.57vw, 10px);
+  font-weight: 700;
+}
+
+.score-reference span {
+  display: block;
+  margin-top: 1px;
+  color: var(--lilac-ash);
+  font-size: clamp(7.5px, 0.52vw, 9px);
+  font-weight: 700;
+}
+
+.gap-callout {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 9px;
+  margin-top: 6px;
+  color: var(--parchment);
+  background: var(--dusty-grape);
+  border-radius: 5px;
+}
+
+.gap-callout span {
+  font-size: clamp(8px, 0.56vw, 10px);
+  font-weight: 700;
+}
+
+.gap-callout strong {
+  font-size: clamp(11px, 0.85vw, 15px);
+}
+
 .verdict-notes {
   display: grid;
-  gap: clamp(8px, 0.8vw, 14px);
+  gap: 0;
+  margin-top: 3px;
 }
 
 .verdict-notes div {
   display: grid;
-  grid-template-columns: 74px 1fr;
-  gap: 10px;
-  padding-top: clamp(7px, 0.65vw, 12px);
+  grid-template-columns: 68px 1fr;
+  gap: 8px;
+  padding-top: clamp(5px, 0.48vw, 8px);
   border-top: 1px solid rgba(74, 78, 105, 0.18);
 }
 
 .verdict-notes span {
   color: var(--dusty-grape);
-  font-size: clamp(10px, 0.72vw, 13px);
+  font-size: clamp(8px, 0.58vw, 10px);
   font-weight: 900;
 }
 
 .verdict-notes p {
   margin: 0;
   color: var(--dusty-grape);
-  font-size: clamp(10px, 0.72vw, 13px);
+  font-size: clamp(8px, 0.58vw, 10px);
   font-weight: 600;
   line-height: 1.5;
 }
@@ -326,6 +436,15 @@ blockquote {
   font-size: 10px;
   font-weight: 800;
   cursor: pointer;
+}
+
+.help-dialog .data-note {
+  margin: 0 0 18px;
+  color: var(--dusty-grape);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.55;
 }
 
 .slide-controls button:hover:not(:disabled),
