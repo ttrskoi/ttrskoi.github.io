@@ -192,6 +192,22 @@ const projects = [
   },
 ];
 
+const gradientLevels = [
+  ["高冲", "602–610", "差距较大，主要放最前面搏机会"],
+  ["冲刺", "594–601", "有价值但偏难，需要谨慎数量"],
+  ["小冲", "586–593", "比较适合放冲刺主体"],
+  ["稳中带冲", "579–585", "接近本人分数，是重点关注区"],
+  ["稳妥", "572–578", "比本人低 3–9 分左右，适合做稳妥层"],
+  ["保底", "565–571", "明显低于本人，承担保底功能"],
+  ["兜底", "555–564", "最后兜底，必须留一些"],
+];
+
+function reachClassName(reach) {
+  if (reach === "高冲") return "hard";
+  if (reach === "小冲") return "soft";
+  return "reach";
+}
+
 function MetricCard({ metric }) {
   const [label, grade, reason, featured] = metric;
   return (
@@ -218,6 +234,63 @@ function ScoreReference({ reference }) {
   );
 }
 
+function GradientGuide({ compact = false }) {
+  return (
+    <section className={`gradient-guide ${compact ? "gradient-guide--compact" : ""}`} aria-label="梯度口径说明">
+      <div className="gradient-guide__intro">
+        <span>阅读口径</span>
+        <p>
+          本幻灯片按 <strong>581 分 / 54115 位</strong> 保守口径判断；梯度来自 2026 同位次折算分，不直接硬比原始分数。
+        </p>
+      </div>
+      <div className="gradient-scale">
+        {gradientLevels.map(([label, range, note]) => (
+          <div className="gradient-scale__item" key={label}>
+            <strong>{label}</strong>
+            <span>{range}</span>
+            {!compact && <p>{note}</p>}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function MenuOverlay({ currentIndex, onClose, onSelect }) {
+  return (
+    <div className="menu-backdrop" role="presentation" onClick={onClose}>
+      <section className="menu-panel" role="dialog" aria-modal="true" aria-label="项目目录" onClick={(event) => event.stopPropagation()}>
+        <header className="menu-panel__header">
+          <div>
+            <p className="eyebrow">项目目录</p>
+            <h2>选择想看的页面</h2>
+          </div>
+          <button type="button" onClick={onClose}>关闭</button>
+        </header>
+
+        <GradientGuide compact />
+
+        <div className="menu-grid" aria-label="项目列表">
+          {projects.map((item, itemIndex) => (
+            <button
+              className={`menu-card ${itemIndex === currentIndex ? "menu-card--active" : ""}`}
+              type="button"
+              key={`${item.shortTitle}-${item.major}-${itemIndex}`}
+              onClick={() => onSelect(itemIndex)}
+            >
+              <span className="menu-card__number">{String(itemIndex + 1).padStart(2, "0")}</span>
+              <span className={`reach-badge reach-badge--${reachClassName(item.reach)}`}>{item.reach}</span>
+              <strong>{item.shortTitle}</strong>
+              <em>{item.major}</em>
+              <small>{item.programMode.kind} · {item.programMode.path}</small>
+            </button>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export function App() {
   const [index, setIndex] = useState(() => {
     const hash = Number(window.location.hash.replace("#", ""));
@@ -225,6 +298,7 @@ export function App() {
   });
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const project = projects[index];
 
   const move = useMemo(
@@ -244,12 +318,26 @@ export function App() {
   useEffect(() => {
     const onFullscreen = () => setIsFullscreen(Boolean(document.fullscreenElement));
     const onKeyDown = (event) => {
+      if (showMenu || showHelp) {
+        if (event.key === "Escape") {
+          setShowHelp(false);
+          setShowMenu(false);
+        }
+        if (event.key.toLowerCase() === "m") setShowMenu((value) => !value);
+        if (event.key === "?") setShowHelp((value) => !value);
+        return;
+      }
+
       if (event.key === "ArrowLeft" || event.key === "PageUp") move.previous();
       if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") move.next();
       if (event.key === "Home") move.first();
       if (event.key === "End") move.last();
       if (event.key.toLowerCase() === "f") document.documentElement.requestFullscreen?.();
-      if (event.key === "Escape") setShowHelp(false);
+      if (event.key === "Escape") {
+        setShowHelp(false);
+        setShowMenu(false);
+      }
+      if (event.key.toLowerCase() === "m") setShowMenu((value) => !value);
       if (event.key === "?") setShowHelp((value) => !value);
     };
 
@@ -259,11 +347,16 @@ export function App() {
       document.removeEventListener("fullscreenchange", onFullscreen);
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [move]);
+  }, [move, showHelp, showMenu]);
 
   const toggleFullscreen = async () => {
     if (document.fullscreenElement) await document.exitFullscreen?.();
     else await document.documentElement.requestFullscreen?.();
+  };
+
+  const selectProject = (selectedIndex) => {
+    setIndex(selectedIndex);
+    setShowMenu(false);
   };
 
   return (
@@ -291,7 +384,7 @@ export function App() {
             <div className="verdict-panel__intro">
               <div className="verdict-panel__label-row">
                 <span>综合判断</span>
-                <em className={`reach-badge reach-badge--${project.reach === "高冲" ? "hard" : project.reach === "小冲" ? "soft" : "reach"}`}>
+                <em className={`reach-badge reach-badge--${reachClassName(project.reach)}`}>
                   {project.reach}
                 </em>
               </div>
@@ -340,11 +433,16 @@ export function App() {
             <button type="button" onClick={move.previous} disabled={index === 0}>上一页</button>
             <span>{String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
             <button type="button" onClick={move.next} disabled={index === projects.length - 1}>下一页</button>
+            <button type="button" onClick={() => setShowMenu(true)}>目录</button>
             <button type="button" onClick={toggleFullscreen}>{isFullscreen ? "退出全屏" : "全屏"}</button>
             <button type="button" onClick={() => setShowHelp(true)}>快捷键</button>
           </div>
         </footer>
       </section>
+
+      {showMenu && (
+        <MenuOverlay currentIndex={index} onClose={() => setShowMenu(false)} onSelect={selectProject} />
+      )}
 
       {showHelp && (
         <div className="help-backdrop" role="presentation" onClick={() => setShowHelp(false)}>
@@ -353,12 +451,11 @@ export function App() {
             <dl>
               <div><dt>← / →</dt><dd>切换项目</dd></div>
               <div><dt>Home / End</dt><dd>第一页 / 最后一页</dd></div>
+              <div><dt>M</dt><dd>打开项目目录</dd></div>
               <div><dt>F</dt><dd>进入全屏</dd></div>
               <div><dt>?</dt><dd>显示快捷键</dd></div>
             </dl>
-            <p className="data-note">
-              位次口径按 2026 逐分段表：581 分对应约 54115 位。新梯度为：高冲 602–610，冲刺 594–601，小冲 586–593，稳中带冲 579–585，稳妥 572–578，保底 565–571，兜底 555–564。
-            </p>
+            <GradientGuide />
             <button type="button" onClick={() => setShowHelp(false)}>知道了</button>
           </section>
         </div>
