@@ -236,6 +236,12 @@ h1 {
   background: var(--dusty-grape);
 }
 
+.reach-badge--soft {
+  color: var(--space-indigo);
+  background: rgba(201, 173, 167, 0.54);
+  border: 1px solid rgba(74, 78, 105, 0.18);
+}
+
 .verdict-panel__intro strong {
   display: block;
   margin: 2px 0 3px;

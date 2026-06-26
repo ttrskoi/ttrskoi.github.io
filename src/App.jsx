@@ -25,8 +25,8 @@ const projects = [
       { year: "2025", score: "604", rank: "31362", equivalent: "约 605", note: "高位组保守参考" },
     ],
     gap: "约差 18–24 分",
-    assessment: "项目本身最值得优先，但当前位次约落后 1.8 万—2.3 万位。",
-    caution: "专业—组号需以 2026 招生计划核对；本页按计算机高位组保守估计。",
+    assessment: "新全量表中南师大33中外组 2026 同位次分 604，落在高冲层。",
+    caution: "项目价值高但差距较大，适合放最前面搏机会；专业—组号仍需最终核对。",
   },
   {
     shortTitle: "南信大雷丁",
@@ -35,7 +35,7 @@ const projects = [
     programMode: { kind: "中外合办", path: "4+0，可选 2+2 / 3+1 转入" },
     grade: "S",
     verdict: "就业转向最灵活",
-    reach: "冲刺",
+    reach: "小冲",
     positioning: "数据主赛道＋气象地学特色＋海外衔接",
     metrics: [
       ["中方学校层级", "A+", "南信大为“双一流”高校，非 211，但学校特色非常鲜明。"],
@@ -52,8 +52,8 @@ const projects = [
       { year: "2025", score: "588", rank: "45634", equivalent: "约 589", note: "分专业最低分" },
     ],
     gap: "约差 8 分",
-    assessment: "七项中相对更接近的热门项目，适合作为主要冲刺目标。",
-    caution: "不能把学院最低组线直接当作数据科学专业线；优先参考分专业数据。",
+    assessment: "2025 分专业最低分 588，折算约 589，按新梯度归入小冲。",
+    caution: "全量表中南信大中外组存在 577/595 两档，具体专业仍优先看分专业线。",
   },
   {
     shortTitle: "南农密西根",
@@ -62,7 +62,7 @@ const projects = [
     programMode: { kind: "中外合办", path: "2.5+1.5 或 4+0" },
     grade: "S",
     verdict: "专业匹配度最高",
-    reach: "冲刺偏难",
+    reach: "冲刺",
     positioning: "211 平台＋强食品学科＋强农食外方",
     metrics: [
       ["中方学校层级", "S", "南农为教育部直属 211、“双一流”高校，平台扎实。"],
@@ -79,8 +79,8 @@ const projects = [
       { year: "2025", score: "594", rank: "40639", equivalent: "约 594", note: "06 中外合作组" },
     ],
     gap: "约差 13 分",
-    assessment: "专业质量很强，但当前位次与 2025 参考线约差 1.35 万位。",
-    caution: "如果招生人数扩张或学费带来降温可尝试冲，不可作为稳妥选择。",
+    assessment: "新全量表中南农06中外组 2026 同位次分 594，正好进入冲刺层。",
+    caution: "594 是冲刺下沿，值得搏但不能当稳妥；专业强度更适合读研/出国规划。",
   },
   {
     shortTitle: "南信大雷丁",
@@ -89,7 +89,7 @@ const projects = [
     programMode: { kind: "中外合办", path: "4+0，可选 2+2 / 3+1 转入" },
     grade: "A+ / S-",
     verdict: "强学科，窄方向",
-    reach: "冲刺偏难",
+    reach: "小冲",
     positioning: "全球强势大气学科＋高度匹配的雷丁方向",
     metrics: [
       ["中方学校层级", "A+", "南信大为“双一流”高校，前身为南京气象学院。"],
@@ -106,8 +106,8 @@ const projects = [
       { year: "2025", score: "592", rank: "41600", equivalent: "约 593", note: "分专业最低分" },
     ],
     gap: "约差 12 分",
-    assessment: "专业吸引力强，2025 分专业位次比考生领先约 1.25 万位。",
-    caution: "学院最低组线不能替代大气科学专业线；适合真正愿意深造的考生。",
+    assessment: "2025 分专业最低分 592，折算约 593，按新梯度落在小冲上沿。",
+    caution: "它接近冲刺线边界，学科很强但方向窄；不要只用学院最低组线判断。",
   },
   {
     shortTitle: "南师大中澳",
@@ -116,7 +116,7 @@ const projects = [
     programMode: { kind: "学分互认", path: "2+2" },
     grade: "A+",
     verdict: "高上限，高风险",
-    reach: "高冲",
+    reach: "冲刺",
     positioning: "南师大＋计算机＋高层级外方",
     metrics: [
       ["中方学校层级", "S", "南师大为“双一流”高校，国内平台与省内认可度强。"],
@@ -132,9 +132,9 @@ const projects = [
       { year: "2024", score: "600", rank: "30768", equivalent: "约 605", note: "25 学分互认组" },
       { year: "2025", score: "601", rank: "33985", equivalent: "约 602", note: "34 高位组参考" },
     ],
-    gap: "约差 21–24 分",
-    assessment: "录取位次、家庭预算和出国执行三方面都存在较高门槛。",
-    caution: "只有明确愿意出国、英语与预算都能跟上时，才值得靠前放。",
+    gap: "约差 20–21 分",
+    assessment: "新全量表中南师大34学分互认组 2026 同位次分 601，归入冲刺层。",
+    caution: "录取梯度从高冲下调为冲刺，但预算、英语和出国执行仍是硬门槛。",
   },
   {
     shortTitle: "河海里尔",
@@ -143,7 +143,7 @@ const projects = [
     programMode: { kind: "中外合办", path: "4 年制双文凭 / 本硕工程师衔接" },
     grade: "A",
     verdict: "211 平台型选择",
-    reach: "冲刺偏难",
+    reach: "冲刺",
     positioning: "河海平台＋机械＋智能制造升级路线",
     metrics: [
       ["中方学校层级", "S", "河海为教育部直属 211、“双一流”高校，平台强。"],
@@ -160,8 +160,8 @@ const projects = [
       { year: "2025", score: "594", rank: "40639", equivalent: "约 594", note: "08 中外合作组" },
     ],
     gap: "约差 13–14 分",
-    assessment: "近两年位次稳定在约 4 万位，考生当前约落后 1.4 万位。",
-    caution: "除非招生计划扩张或热度下降，否则录取概率不宜高估。",
+    assessment: "新全量表中河海08中外组 2026 同位次分 594，进入冲刺层。",
+    caution: "594 是冲刺下沿，平台值得搏，但机械方向仍要主动叠加智能制造能力。",
   },
   {
     shortTitle: "南师大麦考瑞",
@@ -170,7 +170,7 @@ const projects = [
     programMode: { kind: "中外合办", path: "4+0 双学位" },
     grade: "A",
     verdict: "数学强者的交叉路线",
-    reach: "冲刺",
+    reach: "小冲",
     positioning: "数学＋统计＋金融＋数据科学",
     metrics: [
       ["中方学校层级", "S", "南师大为“双一流”高校，学校平台与省内认可度强。"],
@@ -187,8 +187,8 @@ const projects = [
       { year: "2025", score: "590", rank: "44618", equivalent: "约 590", note: "低位组参考" },
     ],
     gap: "约差 9–18 分",
-    assessment: "按 2025 低位组口径，是南师大项目中相对更接近的一项。",
-    caution: "专业—组号仍需以 2026 招生计划核对；数学 96 分也需评估学习适配度。",
+    assessment: "新全量表中南师大32中外组 2026 同位次分 590，归入小冲层。",
+    caution: "若金融数学实际落在更高组，难度会上调；数学 96 分也需评估学习适配度。",
   },
 ];
 
@@ -291,7 +291,7 @@ export function App() {
             <div className="verdict-panel__intro">
               <div className="verdict-panel__label-row">
                 <span>综合判断</span>
-                <em className={`reach-badge reach-badge--${project.reach.includes("高冲") ? "hard" : "reach"}`}>
+                <em className={`reach-badge reach-badge--${project.reach === "高冲" ? "hard" : project.reach === "小冲" ? "soft" : "reach"}`}>
                   {project.reach}
                 </em>
               </div>
@@ -357,7 +357,7 @@ export function App() {
               <div><dt>?</dt><dd>显示快捷键</dd></div>
             </dl>
             <p className="data-note">
-              位次口径按 2026 逐分段表：581 分对应约 54115 位。考生信息中记录的 53035 位更接近 582 分，因此页面采用更保守口径。
+              位次口径按 2026 逐分段表：581 分对应约 54115 位。新梯度为：高冲 602–610，冲刺 594–601，小冲 586–593，稳中带冲 579–585，稳妥 572–578，保底 565–571，兜底 555–564。
             </p>
             <button type="button" onClick={() => setShowHelp(false)}>知道了</button>
           </section>
