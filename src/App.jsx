@@ -4,7 +4,8 @@ const projects = [
   {
     shortTitle: "南师大麦考瑞",
     major: "计算机科学与技术",
-    meta: ["南京师范大学", "Macquarie University", "4+0 双学位"],
+    meta: ["南京师范大学", "Macquarie University", "中外合办 4+0"],
+    programMode: { kind: "中外合办", path: "4+0 双学位" },
     grade: "SSS- / S+",
     verdict: "最均衡，项目价值最高",
     reach: "高冲",
@@ -30,7 +31,8 @@ const projects = [
   {
     shortTitle: "南信大雷丁",
     major: "数据科学与大数据技术",
-    meta: ["南京信息工程大学", "University of Reading", "4 年制 / 可转入"],
+    meta: ["南京信息工程大学", "University of Reading", "中外合办 4+0"],
+    programMode: { kind: "中外合办", path: "4+0，可选 2+2 / 3+1 转入" },
     grade: "S",
     verdict: "就业转向最灵活",
     reach: "冲刺",
@@ -56,7 +58,8 @@ const projects = [
   {
     shortTitle: "南农密西根",
     major: "食品科学与工程",
-    meta: ["南京农业大学", "Michigan State University", "2.5+1.5 / 支持 4+0"],
+    meta: ["南京农业大学", "Michigan State University", "中外合办 2.5+1.5"],
+    programMode: { kind: "中外合办", path: "2.5+1.5 或 4+0" },
     grade: "S",
     verdict: "专业匹配度最高",
     reach: "冲刺偏难",
@@ -82,7 +85,8 @@ const projects = [
   {
     shortTitle: "南信大雷丁",
     major: "大气科学",
-    meta: ["南京信息工程大学", "University of Reading", "强学科 / 深造型"],
+    meta: ["南京信息工程大学", "University of Reading", "中外合办 4+0"],
+    programMode: { kind: "中外合办", path: "4+0，可选 2+2 / 3+1 转入" },
     grade: "A+ / S-",
     verdict: "强学科，窄方向",
     reach: "冲刺偏难",
@@ -108,7 +112,8 @@ const projects = [
   {
     shortTitle: "南师大中澳",
     major: "计算机科学与技术",
-    meta: ["南京师范大学", "University of Queensland", "学分互认 / 2+2"],
+    meta: ["南京师范大学", "University of Queensland", "学分互认 2+2"],
+    programMode: { kind: "学分互认", path: "2+2" },
     grade: "A+",
     verdict: "高上限，高风险",
     reach: "高冲",
@@ -134,7 +139,8 @@ const projects = [
   {
     shortTitle: "河海里尔",
     major: "机械工程",
-    meta: ["河海大学", "Université de Lille", "中法工程师路径"],
+    meta: ["河海大学", "Université de Lille", "中外合办 4+0"],
+    programMode: { kind: "中外合办", path: "4 年制双文凭 / 本硕工程师衔接" },
     grade: "A",
     verdict: "211 平台型选择",
     reach: "冲刺偏难",
@@ -160,7 +166,8 @@ const projects = [
   {
     shortTitle: "南师大麦考瑞",
     major: "金融数学",
-    meta: ["南京师范大学", "Macquarie University", "4+0 双学位"],
+    meta: ["南京师范大学", "Macquarie University", "中外合办 4+0"],
+    programMode: { kind: "中外合办", path: "4+0 双学位" },
     grade: "A",
     verdict: "数学强者的交叉路线",
     reach: "冲刺",
@@ -293,6 +300,12 @@ export function App() {
             </div>
 
             <blockquote>{project.positioning}</blockquote>
+
+            <div className="program-mode-card" aria-label="项目培养模式">
+              <span>项目模式</span>
+              <strong>{project.programMode.kind}</strong>
+              <em>{project.programMode.path}</em>
+            </div>
 
             <div className="candidate-strip">
               <span>考生基准</span>
